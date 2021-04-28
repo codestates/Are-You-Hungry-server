@@ -129,38 +129,38 @@ for (let i = 0; i <= 7; i++) {
     });
 }
 
-for (let i = 0; i < 4; i++) {
-  let cmd = `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000228_1/${
-    1 + i * 1000
-  }/${(i + 1) * 1000}`;
-  axios
-    .get(cmd)
-    .then((res) => res.data)
-    .then((res) => {
-      return res["Grid_20150827000000000228_1"];
-    })
-    .then((res) => res.row)
-    .then(async (res) => {
-      for (let data of res) {
-        let {
-          RECIPE_ID,
-          COOKING_NO,
-          COOKING_DC,
-          STRE_STEP_IMAGE_URL,
-          STEP_TIP,
-        } = data;
-        let ans = await Recipe.findOne({
-          where: { food_id: RECIPE_ID, cooking_no: COOKING_NO },
-        });
-        if (ans === null) {
-          await Recipe.create({
-            food_id: RECIPE_ID,
-            cooking_no: COOKING_NO,
-            cooking_dc: COOKING_DC,
-            step_img: STRE_STEP_IMAGE_URL,
-            step_tip: STEP_TIP,
-          });
-        }
-      }
-    });
-}
+// for (let i = 0; i < 4; i++) {
+//   let cmd = `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000228_1/${
+//     1 + i * 1000
+//   }/${(i + 1) * 1000}`;
+//   axios
+//     .get(cmd)
+//     .then((res) => res.data)
+//     .then((res) => {
+//       return res["Grid_20150827000000000228_1"];
+//     })
+//     .then((res) => res.row)
+//     .then(async (res) => {
+//       for (let data of res) {
+//         let {
+//           RECIPE_ID,
+//           COOKING_NO,
+//           COOKING_DC,
+//           STRE_STEP_IMAGE_URL,
+//           STEP_TIP,
+//         } = data;
+//         let ans = await Recipe.findOne({
+//           where: { food_id: RECIPE_ID, cooking_no: COOKING_NO },
+//         });
+//         if (ans === null) {
+//           await Recipe.create({
+//             food_id: RECIPE_ID,
+//             cooking_no: COOKING_NO,
+//             cooking_dc: COOKING_DC,
+//             step_img: STRE_STEP_IMAGE_URL,
+//             step_tip: STEP_TIP,
+//           });
+//         }
+//       }
+//     });
+// }

@@ -10,7 +10,6 @@ module.exports = {
       },
       igr_id: {
         type: Sequelize.INTEGER,
-        f,
       },
       food_id: {
         type: Sequelize.INTEGER,
