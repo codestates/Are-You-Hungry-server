@@ -9,6 +9,10 @@ router.patch("/", (req, res) => {
   res.status(200).end("update userinfo");
 });
 
+router.delete("/", (req, res) => {
+  res.status(200).end("delete userinfo");
+});
+
 router.patch("/password", (req, res) => {
   res.status(200).end("password");
 });
