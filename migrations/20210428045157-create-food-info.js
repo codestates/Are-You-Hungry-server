@@ -11,9 +11,6 @@ module.exports = {
       user_id: {
         type: Sequelize.INTEGER,
       },
-      user_name: {
-        type: Sequelize.STRING,
-      },
       food_name: {
         type: Sequelize.STRING,
       },
