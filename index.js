@@ -1,15 +1,14 @@
-const express = require('express');
-const app = express();
-const cors = require('cors');
+const express = require("express");
+const server = express();
+const cors = require("cors");
+const app = require("./con/index");
 
-app.use(cors());
+server.use(cors());
 
 const PORT = 4000;
 
-app.get('/', (req, res) => {
-  res.status(200).send('Hello World');
-});
+server.get("/", app);
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`서버가 ${PORT}번에서 작동중입니다.`);
 });
