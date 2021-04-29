@@ -1,5 +1,5 @@
 {
-  "development2": {
+  "development": {
     "username": "root",
     "password": "J966Squg8ZsEMmXWLPui",
     "database": "foodcollector",
@@ -7,7 +7,7 @@
     "port": "13306",
     "dialect": "mysql"
   },
-  "development": {
+  "development2": {
     "username": "root",
     "password": "!Vkaufwk9128",
     "database": "foodcollector",
