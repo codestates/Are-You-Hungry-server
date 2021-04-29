@@ -8,7 +8,7 @@
     "dialect": "mysql"
   },
   "development": {
-    "username": "foodcollector",
+    "username": "root",
     "password": "!Vkaufwk9128",
     "database": "foodcollector",
     "host": "127.0.0.1",

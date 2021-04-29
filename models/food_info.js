@@ -13,6 +13,8 @@ module.exports = (sequelize, DataTypes) => {
   }
   Food_info.init(
     {
+      user_id: DataTypes.INTEGER,
+      username: DataTypes.STRING,
       food_name: DataTypes.STRING,
       summary: DataTypes.STRING,
       nation_id: DataTypes.INTEGER,
