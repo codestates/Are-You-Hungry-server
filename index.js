@@ -7,7 +7,7 @@ server.use(cors());
 
 const PORT = 4000;
 
-server.get("/", app);
+server.use("/", app);
 
 server.listen(PORT, () => {
   console.log(`서버가 ${PORT}번에서 작동중입니다.`);
