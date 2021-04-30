@@ -70,7 +70,7 @@ router.post("/signup", (req, res) => {
       crypto.pbkdf2(
         req.body.password,
         buf.toString("base64"),
-        100000,
+        120900,
         64,
         "sha512",
         (err, key) => {
