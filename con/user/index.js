@@ -6,11 +6,11 @@ const { route } = require("../search");
 const ACCESS_SECRET = process.env.ACCESS_SECRET;
 
 router.get("/likes*", (req, res) => {
-  res.status(200).end("get userinfo");
+  res.status(200).end("get likes");
 });
 
 router.get("/uploaded*", (req, res) => {
-  res.status(200).end("get userinfo");
+  res.status(200).end("get uploaded");
 });
 
 router.get("/", (req, res) => {

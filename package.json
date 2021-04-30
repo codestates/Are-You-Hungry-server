@@ -13,11 +13,20 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/triple486/Are-You-Hungry-server/issues"
+    "url": "https://github.com/karuiner/Are-You-Hungry-server/issues"
   },
-  "homepage": "https://github.com/triple486/Are-You-Hungry-server#readme",
+  "homepage": "https://github.com/karuiner/Are-You-Hungry-server#readme",
   "dependencies": {
+    "axios": "^0.21.1",
+    "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
-    "express": "^4.17.1"
+    "crypto": "^1.0.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5",
+    "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0"
   }
 }
