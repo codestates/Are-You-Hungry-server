@@ -1,28 +1,22 @@
 const express = require("express");
 const router = express.Router();
+const recipe = require("./recipe/index");
+router.use("/recipe", recipe);
 
 router.get("/", (req, res) => {
-  res.status(200).end("get userinfo");
+  res.status(200).send("get userinfo");
 });
 
 router.patch("/", (req, res) => {
-  res.status(200).end("update userinfo");
+  res.status(200).send("update userinfo");
 });
 
 router.delete("/", (req, res) => {
-  res.status(200).end("delete userinfo");
+  res.status(200).send("delete userinfo");
 });
 
 router.patch("/password", (req, res) => {
-  res.status(200).end("password");
-});
-
-router.post("/recipe", (req, res) => {
-  res.status(200).end("add recipe");
-});
-
-router.patch("/recipe", (req, res) => {
-  res.status(200).end("update recipe");
+  res.status(200).send("password");
 });
 
 module.exports = router;

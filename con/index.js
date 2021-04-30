@@ -11,15 +11,15 @@ router.get("/", (req, res) => {
 });
 
 router.post("/signin", (req, res) => {
-  res.status(201).end("signin");
+  res.status(201).send("signin");
 });
 
 router.post("/signup", (req, res) => {
-  res.status(201).end("signup");
+  res.status(201).send("signup");
 });
 
 router.get("/signout", (req, res) => {
-  res.status(200).end("signout");
+  res.status(200).send("signout");
 });
 
 module.exports = router;
