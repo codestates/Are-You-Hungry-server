@@ -37,7 +37,7 @@ router.post("/signin", (req, res) => {
         (err, key) => {
           if (ans.password === key.toString("base64")) {
             check++;
-            let { username } = ans;
+            let { username, email, phone, userimage, createdAt } = ans;
             const accesstoken = sign({ username }, ACCESS_SECRET, {
               expiresIn: "10m",
             });
@@ -45,7 +45,13 @@ router.post("/signin", (req, res) => {
             res.append("Set-Cookie", `refreshToken=${refreshtoken};`);
             res
               .status(200)
-              .json({ data: { accessToken: accesstoken }, message: "ok" });
+              .json({
+                data: {
+                  accessToken: accesstoken,
+                  userinfo: { username, email, phone, userimage, createdAt },
+                },
+                message: "ok",
+              });
           } else {
             res.status(400).json({ data: null, message: "nok" });
           }
