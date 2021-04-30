@@ -94,7 +94,6 @@ router.post("/signup", (req, res) => {
             userimage: req.body.userimage ? req.body.userimage : "",
           });
           res.status(201).send("signup");
-          console.log(key.toString("base64"));
         }
       );
     });
