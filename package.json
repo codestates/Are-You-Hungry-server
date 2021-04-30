@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+
     "start": "node index.js"
   },
   "repository": {
@@ -13,11 +14,20 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/triple486/Are-You-Hungry-server/issues"
+    "url": "https://github.com/karuiner/Are-You-Hungry-server/issues"
   },
-  "homepage": "https://github.com/triple486/Are-You-Hungry-server#readme",
+  "homepage": "https://github.com/karuiner/Are-You-Hungry-server#readme",
+  "devDependencies": {
+
+},
   "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0",
+    "mysql2": "^2.2.5"
     "cors": "^2.8.5",
     "express": "^4.17.1"
+        "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0"
+
   }
 }
