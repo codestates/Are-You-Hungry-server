@@ -59,6 +59,8 @@ router.post("/signin", (req, res) => {
             res
               .status(200)
               .json({ data: { accessToken: accesstoken }, message: "ok" });
+          } else {
+            res.status(400).json({ data: null, message: "nok" });
           }
         }
       );
