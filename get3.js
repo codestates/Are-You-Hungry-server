@@ -174,43 +174,6 @@ async function run2(a, b) {
     });
 }
 
-// async function run3() {
-//   let data = [];
-//   for (let i = 1; i < 600; i++) {
-//     let cmd = `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000228_1/1/100/?RECIPE_ID=${i}`;
-//     let res = await axios
-//       .get(cmd)
-//       .then((res) => res.data)
-//       .then((res) => {
-//         return res["Grid_20150827000000000228_1"];
-//       })
-//       .then((res) => res.row);
-//     data = data.concat(res);
-//     console.log(data.length);
-//   }
-//   let ndata = JSON.stringify(data);
-//   fs.writeFileSync("./data.txt", ndata);
-// }
-// async function run4() {
-//   let data = fs.readFileSync("./data.txt");
-//   data = JSON.parse(data);
-//   for (let {
-//     RECIPE_ID,
-//     COOKING_NO,
-//     COOKING_DC,
-//     STRE_STEP_IMAGE_URL,
-//     STEP_TIP,
-//   } of data) {
-//     let ans = await Recipe.create({
-//       food_id: RECIPE_ID,
-//       cooking_no: COOKING_NO,
-//       cooking_dc: COOKING_DC,
-//       step_img: STRE_STEP_IMAGE_URL,
-//       step_tip: STEP_TIP,
-//     });
-//   }
-// }
-
 async function dod2() {
   await run2(1, 1000);
   await run2(1001, 2000);
@@ -218,7 +181,3 @@ async function dod2() {
   await run2(3001, 4000);
 }
 dod2();
-
-// run3();
-
-//run4();
