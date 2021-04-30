@@ -1,0 +1,23 @@
+{
+  "name": "are-you-hungry-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/triple486/Are-You-Hungry-server.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/triple486/Are-You-Hungry-server/issues"
+  },
+  "homepage": "https://github.com/triple486/Are-You-Hungry-server#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1"
+  }
+}
