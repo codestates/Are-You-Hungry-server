@@ -11,7 +11,6 @@ const {
 } = require("./models");
 const axios = require("axios");
 const API_KEY = process.env.API_KEY;
-//let cmd = `http://211.237.50.150:7080/openapi/${API_KEY}/json/Grid_20150827000000000226_1/1/10/?RECIPE_NM_KO=${food_name}`;
 async function info_check() {
   let ans = await Food_info.findAll({});
   async function parm_check({
@@ -86,37 +85,6 @@ async function info_check() {
           );
           console.log(res[0]);
         }
-        // let ans = await Nation.findOne({ where: { name: NATION_NM } });
-        // if (ans === null) {
-        //   let p = await Nation.create({ code: NATION_CODE, name: NATION_NM });
-        //   nation_id = p.dataValues.id;
-        // } else {
-        //   nation_id = ans.dataValues.id;
-        // }
-        // ans = await Food_type.findOne({ where: { name: TY_NM } });
-        // if (ans === null) {
-        //   let p = await Food_type.create({ code: TY_CODE, name: TY_NM });
-        //   type_id = p.dataValues.id;
-        // } else {
-        //   type_id = ans.dataValues.id;
-        // }
-        // ans = await Food_info.findOne({ where: { id: RECIPE_ID } });
-        // if (ans === null) {
-        //   ans = await Food_info.create({
-        //     user_id: 2,
-        //     food_name: RECIPE_NM_KO,
-        //     summary: SUMRY,
-        //     nation_id,
-        //     type_id,
-        //     cooking_time: COOKING_TIME,
-        //     calorie: CALORIE,
-        //     qnt: QNT,
-        //     level: LEVEL_NM,
-        //     irdnt_code: IRDNT_CODE,
-        //     price: PC_NM,
-        //     food_img: IMG_URL,
-        //   });
-        // }
       })
       .catch((err) => {
         console.log(err);
@@ -126,6 +94,5 @@ async function info_check() {
   for (let i of ans) {
     parm_check(i.dataValues);
   }
-  //  parm_check(ans[0].dataValues);
 }
 info_check();

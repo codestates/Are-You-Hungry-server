@@ -12,19 +12,6 @@ const Seq = require("sequelize"); //{Op , ...}
 router.use("/user", user);
 router.use("/search", search);
 
-// crypto.randomBytes(64, (err, buf) => {
-//   crypto.pbkdf2(
-//     "비밀번호",
-//     buf.toString("base64"),
-//     100000,
-//     64,
-//     "sha512",
-//     (err, key) => {
-//       console.log(key.toString("base64")); // 'dWhPkH6c4X1Y71A/DrAHhML3DyKQdEkUOIaSmYCI7xZkD5bLZhPF0dOSs2YZA/Y4B8XNfWd3DHIqR5234RtHzw=='
-//     }
-//   );
-// });
-
 router.get("/", (req, res) => {
   res.status(200).send("Hello World");
 });
@@ -32,7 +19,6 @@ router.get("/", (req, res) => {
 router.post("/signin", (req, res) => {
   let { username } = req.body,
     check = 0;
-  if (username === undefined) res.status(400).send("오류");
   Models.User.findOne({ where: { username: username } })
     .then((ans) => {
       if (ans !== null) {
@@ -50,30 +36,29 @@ router.post("/signin", (req, res) => {
         (err, key) => {
           if (ans.password === key.toString("base64")) {
             check++;
-            let { username } = ans;
+            let { username, email, phone, userimage, createdAt } = ans;
             const accesstoken = sign({ username }, ACCESS_SECRET, {
               expiresIn: "10m",
             });
             const refreshtoken = sign({}, REFRESH_SECRET, { expiresIn: "24h" });
             res.append("Set-Cookie", `refreshToken=${refreshtoken};`);
-            res
-              .status(200)
-              .json({ data: { accessToken: accesstoken }, message: "ok" });
+            res.status(200).json({
+              data: {
+                accessToken: accesstoken,
+                userinfo: { username, email, phone, userimage, createdAt },
+              },
+              message: "ok",
+            });
           } else {
-            res.status(400).json({ data: null, message: "nok" });
+            res
+              .status(401)
+              .json({ data: null, message: "not exist", status: check });
           }
         }
       );
     })
     .catch((err) => {
-      switch (check) {
-        case 0:
-          res.status(200).json({ data: null, message: "not exist" });
-          break;
-        case 1:
-          res.status(200).json({ data: null, message: "not authorized" });
-          break;
-      }
+      res.status(401).json({ data: null, message: "not exist", status: check });
     });
 });
 
@@ -83,19 +68,26 @@ router.post("/signup", (req, res) => {
       crypto.pbkdf2(
         req.body.password,
         buf.toString("base64"),
-        100000,
+        120900,
         64,
         "sha512",
         (err, key) => {
-          Models.User.create({
-            username: req.body.username,
-            password: key.toString("base64"),
-            password2: buf.toString("base64"),
-            email: req.body.email,
-            phone: req.body.phone,
-            userimage: req.body.userimage ? req.body.userimage : "",
-          });
-          res.status(201).send("signup");
+          Models.User.findOne({ where: { username: req.body.username } }).then(
+            (rst) => {
+              if (rst === null) {
+                Models.User.create({
+                  username: req.body.username,
+                  password: key.toString("base64"),
+                  password2: buf.toString("base64"),
+                  email: req.body.email,
+                  phone: req.body.phone,
+                  userimage: req.body.userimage ? req.body.userimage : "",
+                }).then((rst) => {
+                  res.status(201).send("signup");
+                });
+              }
+            }
+          );
         }
       );
     });
