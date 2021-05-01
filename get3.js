@@ -42,7 +42,7 @@ axios
       } = data;
       let nation_id, type_id;
       let ans = await Nation.findOne({
-        where: { [Op.and]: [{ id: RECIPE_ID }, { name: NATION_NM }] },
+        where: { [Op.and]: [{ code: NATION_CODE }, { name: NATION_NM }] },
       });
 
       if (ans === null) {
@@ -58,9 +58,10 @@ axios
       } else {
         type_id = ans.dataValues.id;
       }
-      ans = await Food_info.findOne({ where: { id: RECIPE_ID } });
+      ans = await Food_info.findOne({ where: { food_id: RECIPE_ID } });
       if (ans === null) {
         ans = await Food_info.create({
+          food_id: RECIPE_ID,
           user_id: 2,
           food_name: RECIPE_NM_KO,
           summary: SUMRY,
@@ -90,38 +91,21 @@ async function run(a, b) {
     .then(async (res) => {
       for (let data of res) {
         let { ROW_NUM, RECIPE_ID, IRDNT_NM, IRDNT_CPCTY, IRDNT_TY_NM } = data;
-        let igr_id, type_id, cap_id;
-        let ans = await Igr_cap.findOne({ where: { cap: IRDNT_CPCTY } });
-
-        if (ans === null) {
-          let p = await Igr_cap.create({ cap: IRDNT_CPCTY });
-          cap_id = p.dataValues.id;
-        } else {
-          cap_id = ans.dataValues.id;
-        }
-        ans = await Igr_type.findOne({ where: { type: IRDNT_TY_NM } });
-        if (ans === null) {
-          let p = await Igr_type.create({ type: IRDNT_TY_NM });
-          type_id = p.dataValues.id;
-        } else {
-          type_id = ans.dataValues.id;
-        }
-        ans = await Igr.findOne({ where: { name: IRDNT_NM } });
-        if (ans === null) {
-          let p = await Igr.create({ name: IRDNT_NM });
-          igr_id = p.dataValues.id;
-        } else {
-          igr_id = ans.dataValues.id;
-        }
         ans = await Ingredient.findOne({
-          where: { [Op.and]: [{ food_id: RECIPE_ID }, { id: ROW_NUM }] },
+          where: {
+            [Op.and]: [
+              { food_id: RECIPE_ID },
+              { id: ROW_NUM },
+              // { food_id: { [Op.lte]: 573 } },
+            ],
+          },
         });
         if (ans === null) {
           await Ingredient.create({
-            igr_id,
             food_id: RECIPE_ID,
-            type_id,
-            cap_id,
+            name: IRDNT_NM,
+            type: IRDNT_TY_NM,
+            cap: IRDNT_CPCTY,
           });
         }
       }

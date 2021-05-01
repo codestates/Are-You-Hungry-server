@@ -9,20 +9,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // this.belongsTo(models.Food_info, {
-      //   foreignKey: "id",
-      // });
-      // this.hasMany(models.Igr, {
-      //   foreignKey: "id",
-      // });
+
+      this.belongsTo(models.Food_info, {
+        foreignKey: "food_id",
+      });
     }
   }
   Ingredient.init(
     {
-      igr_id: DataTypes.INTEGER,
       food_id: DataTypes.INTEGER,
-      type_id: DataTypes.INTEGER,
-      cap_id: DataTypes.INTEGER,
+      name: DataTypes.STRING,
+      type: DataTypes.STRING,
+      cap: DataTypes.STRING,
     },
     {
       sequelize,
