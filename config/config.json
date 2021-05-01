@@ -1,0 +1,32 @@
+{
+  "development2": {
+    "username": "root",
+    "password": "J966Squg8ZsEMmXWLPui",
+    "database": "foodcollector",
+    "host": "foodcollector.cygozbbhrv7i.ap-northeast-2.rds.amazonaws.com",
+    "port": "13306",
+    "dialect": "mysql"
+  },
+  "development": {
+    "username": "root",
+    "password": "!Vkaufwk9128",
+    "database": "foodcollector",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+
+  "test": {
+    "username": "root",
+    "password": "!Vkaufwk9128",
+    "database": "foodcollector_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "production": {
+    "username": "root",
+    "password": "!Vkaufwk9128",
+    "database": "foodcollector_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
