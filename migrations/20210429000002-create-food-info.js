@@ -8,12 +8,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      food_id: {
+        type: Sequelize.INTEGER,
+      },
       user_id: {
         type: Sequelize.INTEGER,
-        // references: {
-        //   model: "User",
-        //   key: "id",
-        // },
       },
       food_name: {
         type: Sequelize.STRING,
@@ -23,17 +22,9 @@ module.exports = {
       },
       nation_id: {
         type: Sequelize.INTEGER,
-        // references: {
-        //   model: "Nation",
-        //   key: "id",
-        // },
       },
       type_id: {
         type: Sequelize.INTEGER,
-        // references: {
-        //   model: "Food_type",
-        //   key: "id",
-        // },
       },
       cooking_time: {
         type: Sequelize.STRING,

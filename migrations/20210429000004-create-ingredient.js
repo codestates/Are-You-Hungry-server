@@ -8,17 +8,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      igr_id: {
-        type: Sequelize.INTEGER,
-      },
       food_id: {
         type: Sequelize.INTEGER,
       },
-      type_id: {
-        type: Sequelize.INTEGER,
+      name: {
+        type: Sequelize.STRING,
       },
-      cap_id: {
-        type: Sequelize.INTEGER,
+      type: {
+        type: Sequelize.STRING,
+      },
+      cap: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

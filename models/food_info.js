@@ -9,19 +9,26 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      // this.belongsTo(models.User, {
-      //   foreignKey: "id",
-      // });
-      // this.belongsTo(models.Food_type, {
-      //   foreignKey: "id",
-      // });
-      // this.hasMany(models.Ingredient, {
-      //   foreignKey: "food_id",
-      // });
+      this.belongsTo(models.User, {
+        foreignKey: "user_id",
+      });
+      this.belongsTo(models.Food_type, {
+        foreignKey: "type_id",
+      });
+      this.belongsTo(models.Food_type, {
+        foreignKey: "nation_id",
+      });
+      this.hasMany(models.Ingredient, {
+        foreignKey: "food_id",
+      });
+      this.hasMany(models.Recipe, {
+        foreignKey: "food_id",
+      });
     }
   }
   Food_info.init(
     {
+      food_id: DataTypes.INTEGER,
       user_id: DataTypes.INTEGER,
       food_name: DataTypes.STRING,
       summary: DataTypes.STRING,
