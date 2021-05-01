@@ -15,13 +15,17 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.Food_type, {
         foreignKey: "type_id",
       });
-      this.belongsTo(models.Food_type, {
+      this.belongsTo(models.Nation, {
         foreignKey: "nation_id",
       });
       this.hasMany(models.Ingredient, {
         foreignKey: "food_id",
       });
       this.hasMany(models.Recipe, {
+        foreignKey: "food_id",
+      });
+      this.belongsToMany(models.User, {
+        through: models.Likes,
         foreignKey: "food_id",
       });
     }
