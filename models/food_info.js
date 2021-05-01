@@ -12,16 +12,16 @@ module.exports = (sequelize, DataTypes) => {
       this.belongsTo(models.User, {
         foreignKey: "user_id",
       });
-      this.belongsTo(models.Food_type, {
-        foreignKey: "type_id",
-      });
-      this.belongsTo(models.Food_type, {
-        foreignKey: "nation_id",
-      });
+
       this.hasMany(models.Ingredient, {
         foreignKey: "food_id",
       });
       this.hasMany(models.Recipe, {
+        foreignKey: "food_id",
+      });
+      this.belongsToMany(models.User, {
+        through: models.Likes,
+        as: "counted",
         foreignKey: "food_id",
       });
     }
@@ -32,8 +32,8 @@ module.exports = (sequelize, DataTypes) => {
       user_id: DataTypes.INTEGER,
       food_name: DataTypes.STRING,
       summary: DataTypes.STRING,
-      nation_id: DataTypes.INTEGER,
-      type_id: DataTypes.INTEGER,
+      nation: DataTypes.STRING,
+      type: DataTypes.STRING,
       cooking_time: DataTypes.STRING,
       calorie: DataTypes.STRING,
       qnt: DataTypes.STRING,

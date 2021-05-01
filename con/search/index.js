@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const Models = require("../../models");
 const { Op } = require("sequelize");
-const { Model } = require("sequelize");
 router.get("/*", (req, res) => {
   let [type, value] = req.url.split("?")[1].split("=");
   value = decodeURI(value);
@@ -13,13 +12,17 @@ router.get("/*", (req, res) => {
           model: Models.User,
           where: { username: value },
         },
+        {
+          model: Models.User,
+          as: "counted",
+        },
       ],
       order: [["food_id", "ASC"]],
     })
       .then((rst) => {
         let result = rst.map((x) => {
-          let = { food_id, food_name, food_img } = x.dataValues;
-          return { food_id, food_name, food_img };
+          let = { food_id, food_name, food_img, counted } = x.dataValues;
+          return { food_id, food_name, food_img, like: counted.length };
         });
         res.status(200).json({ data: { recipes: result }, message: "ok" });
       })
@@ -33,13 +36,17 @@ router.get("/*", (req, res) => {
           model: Models.Ingredient,
           where: { name: { [Op.like]: "%" + value + "%" } },
         },
+        {
+          model: Models.User,
+          as: "counted",
+        },
       ],
       order: [["food_id", "ASC"]],
     })
       .then((rst) => {
         let result = rst.map((x) => {
-          let = { food_id, food_name, food_img } = x.dataValues;
-          return { food_id, food_name, food_img };
+          let = { food_id, food_name, food_img, counted } = x.dataValues;
+          return { food_id, food_name, food_img, like: counted.length };
         });
         res.status(200).json({ data: { recipes: result }, message: "ok" });
       })
@@ -48,13 +55,19 @@ router.get("/*", (req, res) => {
       });
   } else if (type === "foodname") {
     Models.Food_info.findAll({
+      include: [
+        {
+          model: Models.User,
+          as: "counted",
+        },
+      ],
       where: { food_name: { [Op.like]: "%" + value + "%" } },
       order: [["food_id", "ASC"]],
     })
       .then((rst) => {
         let result = rst.map((x) => {
-          let = { food_id, food_name, food_img } = x.dataValues;
-          return { food_id, food_name, food_img };
+          let = { food_id, food_name, food_img, counted } = x.dataValues;
+          return { food_id, food_name, food_img, like: counted.length };
         });
         res.status(200).json({ data: { recipes: result }, message: "ok" });
       })
@@ -65,8 +78,6 @@ router.get("/*", (req, res) => {
   } else {
     res.status(400).end("fail");
   }
-
-  //  res.status(200).end("search");
 });
 
 module.exports = router;

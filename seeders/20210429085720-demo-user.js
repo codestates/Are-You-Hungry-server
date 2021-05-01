@@ -11,7 +11,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
      */
-    return queryInterface.bulkInsert("Users", [
+    await queryInterface.bulkInsert("Users", [
       {
         username: "admin",
         password:
@@ -37,6 +37,48 @@ module.exports = {
         updatedAt: new Date(),
       },
     ]);
+    await queryInterface.bulkInsert(
+      "Likes",
+      [
+        {
+          food_id: 10,
+          user_id: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          food_id: 15,
+          user_id: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          food_id: 20,
+          user_id: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          food_id: 11,
+          user_id: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          food_id: 100,
+          user_id: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          food_id: 300,
+          user_id: 1,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
+      {}
+    );
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -46,5 +88,7 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    await queryInterface.bulkDelete("Users", null, {});
+    await queryInterface.bulkDelete("Likes", null, {});
   },
 };
