@@ -8,7 +8,7 @@ server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 server.use(cors({ exposedHeaders: "*" }));
-app.use(cookieParser());
+server.use(cookieParser());
 
 const PORT = 4000;
 
