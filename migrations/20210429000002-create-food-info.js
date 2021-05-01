@@ -20,11 +20,11 @@ module.exports = {
       summary: {
         type: Sequelize.STRING,
       },
-      nation_id: {
-        type: Sequelize.INTEGER,
+      nation: {
+        type: Sequelize.STRING,
       },
-      type_id: {
-        type: Sequelize.INTEGER,
+      type: {
+        type: Sequelize.STRING,
       },
       cooking_time: {
         type: Sequelize.STRING,

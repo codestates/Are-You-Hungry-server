@@ -40,24 +40,7 @@ axios
         PC_NM,
         IMG_URL,
       } = data;
-      let nation_id, type_id;
-      let ans = await Nation.findOne({
-        where: { [Op.and]: [{ code: NATION_CODE }, { name: NATION_NM }] },
-      });
 
-      if (ans === null) {
-        let p = await Nation.create({ code: NATION_CODE, name: NATION_NM });
-        nation_id = p.dataValues.id;
-      } else {
-        nation_id = ans.dataValues.id;
-      }
-      ans = await Food_type.findOne({ where: { name: TY_NM } });
-      if (ans === null) {
-        let p = await Food_type.create({ code: TY_CODE, name: TY_NM });
-        type_id = p.dataValues.id;
-      } else {
-        type_id = ans.dataValues.id;
-      }
       ans = await Food_info.findOne({ where: { food_id: RECIPE_ID } });
       if (ans === null) {
         ans = await Food_info.create({
@@ -65,8 +48,8 @@ axios
           user_id: 2,
           food_name: RECIPE_NM_KO,
           summary: SUMRY,
-          nation_id,
-          type_id,
+          nation: NATION_NM,
+          type: TY_NM,
           cooking_time: COOKING_TIME,
           calorie: CALORIE,
           qnt: QNT,
