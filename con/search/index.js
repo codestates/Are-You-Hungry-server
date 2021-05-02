@@ -40,26 +40,28 @@ router.get("/*", (req, res) => {
               order: [["food_id", "ASC"]],
             })
               .then((rst) => {
-                let ulike = rst[0].dataValues.User.liked.reduce((acc, x) => {
-                  acc[x.dataValues.food_id] = true;
-                  return acc;
-                }, {});
-                let result = rst.map((x) => {
-                  let = {
-                    food_id,
-                    food_name,
-                    food_img,
-                    counted,
-                  } = x.dataValues;
-                  return {
-                    food_id,
-                    food_name,
-                    food_img,
-                    like: counted.length,
-                    isOn: ulike[food_id] ? true : false,
-                  };
-                });
-                if (result.length > 0) {
+                if (rst.length > 0) {
+                  let ulike = rst[0].dataValues.User.liked.reduce((acc, x) => {
+                    acc[x.dataValues.food_id] = true;
+                    return acc;
+                  }, {});
+
+                  let result = rst.map((x) => {
+                    let = {
+                      food_id,
+                      food_name,
+                      food_img,
+                      counted,
+                    } = x.dataValues;
+                    return {
+                      food_id,
+                      food_name,
+                      food_img,
+                      like: counted.length,
+                      isOn: ulike[food_id] ? true : false,
+                    };
+                  });
+
                   res
                     .status(200)
                     .json({ data: { recipes: result }, message: "ok" });
@@ -97,27 +99,28 @@ router.get("/*", (req, res) => {
               order: [["food_id", "ASC"]],
             })
               .then((rst) => {
-                let ulike = rst[0].dataValues.User.liked.reduce((acc, x) => {
-                  acc[x.dataValues.food_id] = true;
-                  return acc;
-                }, {});
-                console.log(ulike);
-                let result = rst.map((x) => {
-                  let = {
-                    food_id,
-                    food_name,
-                    food_img,
-                    counted,
-                  } = x.dataValues;
-                  return {
-                    food_id,
-                    food_name,
-                    food_img,
-                    like: counted.length,
-                    isOn: ulike[food_id] ? true : false,
-                  };
-                });
-                if (result.length > 0) {
+                if (rst.length > 0) {
+                  let ulike = rst[0].dataValues.User.liked.reduce((acc, x) => {
+                    acc[x.dataValues.food_id] = true;
+                    return acc;
+                  }, {});
+
+                  let result = rst.map((x) => {
+                    let = {
+                      food_id,
+                      food_name,
+                      food_img,
+                      counted,
+                    } = x.dataValues;
+                    return {
+                      food_id,
+                      food_name,
+                      food_img,
+                      like: counted.length,
+                      isOn: ulike[food_id] ? true : false,
+                    };
+                  });
+
                   res
                     .status(200)
                     .json({ data: { recipes: result }, message: "ok" });
@@ -151,26 +154,28 @@ router.get("/*", (req, res) => {
               order: [["food_id", "ASC"]],
             })
               .then((rst) => {
-                let ulike = rst[0].dataValues.User.liked.reduce((acc, x) => {
-                  acc[x.dataValues.food_id] = true;
-                  return acc;
-                }, {});
-                let result = rst.map((x) => {
-                  let = {
-                    food_id,
-                    food_name,
-                    food_img,
-                    counted,
-                  } = x.dataValues;
-                  return {
-                    food_id,
-                    food_name,
-                    food_img,
-                    like: counted.length,
-                    isOn: ulike[food_id] ? true : false,
-                  };
-                });
-                if (result.length > 0) {
+                if (rst.length > 0) {
+                  let ulike = rst[0].dataValues.User.liked.reduce((acc, x) => {
+                    acc[x.dataValues.food_id] = true;
+                    return acc;
+                  }, {});
+
+                  let result = rst.map((x) => {
+                    let = {
+                      food_id,
+                      food_name,
+                      food_img,
+                      counted,
+                    } = x.dataValues;
+                    return {
+                      food_id,
+                      food_name,
+                      food_img,
+                      like: counted.length,
+                      isOn: ulike[food_id] ? true : false,
+                    };
+                  });
+
                   res
                     .status(200)
                     .json({ data: { recipes: result }, message: "ok" });
