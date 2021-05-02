@@ -54,11 +54,23 @@ router.get("/likes*", (req, res) => {
 });
 
 router.post("/like", (req, res) => {
+  const authorization = req.headers["authorization"].split(" ")[1];
   try {
+    let { id, username } = verify(authorization, ACCESS_SECRET);
+    Models.User.findOne({
+      where: { id, username },
+    })
+      .then((rst) => {
+        if (rst.dataValues) {
+          res.status(200).end("like");
+        }
+      })
+      .catch((err) => {
+        res.status(200).send("invalid user");
+      });
   } catch {
-    res.send("end");
+    res.status(200).send("invalid access token");
   }
-
   // res.status(200).end("get likes");
   // res.status(500).send("err");
 });
