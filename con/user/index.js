@@ -40,6 +40,16 @@ router.get("/likes*", (req, res) => {
   // res.status(500).send("err");
 });
 
+router.post("/like", (req, res) => {
+  try {
+  } catch {
+    res.send("end");
+  }
+
+  // res.status(200).end("get likes");
+  // res.status(500).send("err");
+});
+
 router.get("/uploaded*", (req, res) => {
   res.status(200).end("get uploaded");
   res.status(500).send("err");
@@ -62,6 +72,11 @@ router.delete("/", (req, res) => {
 
 router.patch("/password", (req, res) => {
   res.status(200).end("password");
+  res.status(500).send("err");
+});
+
+router.get("/recipe", (req, res) => {
+  res.status(200).end("get recipe");
   res.status(500).send("err");
 });
 
