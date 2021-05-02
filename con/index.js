@@ -8,7 +8,7 @@ const { sign, verify } = require("jsonwebtoken");
 const ACCESS_SECRET = process.env.ACCESS_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
 const Models = require("../models"); //{  Food_info, Food_type, Igr, Igr_cap, Igr_type, Ingredient, Nation, Recipe, User, like, }
-const Seq = require("sequelize"); //{Op , ...}
+const { Op } = require("sequelize"); //{Op , ...}
 router.use("/user", user);
 router.use("/search", search);
 
@@ -36,11 +36,18 @@ router.post("/signin", (req, res) => {
         (err, key) => {
           if (ans.password === key.toString("base64")) {
             check++;
-            let { username, email, phone, userimage, createdAt } = ans;
-            const accesstoken = sign({ username }, ACCESS_SECRET, {
-              expiresIn: "10m",
+            let { id, username, email, phone, userimage, createdAt } = ans;
+            // 난수 추가할것
+            const accesstoken = sign(
+              { id, username, random: "test" },
+              ACCESS_SECRET,
+              {
+                expiresIn: "10m",
+              }
+            );
+            const refreshtoken = sign({ random: "test" }, REFRESH_SECRET, {
+              expiresIn: "24h",
             });
-            const refreshtoken = sign({}, REFRESH_SECRET, { expiresIn: "24h" });
             res.append("Set-Cookie", `refreshToken=${refreshtoken};`);
             res.status(200).json({
               data: {
@@ -97,7 +104,28 @@ router.post("/signup", (req, res) => {
 });
 
 router.get("/signout", (req, res) => {
-  res.status(200).send("signout");
+  const authorization = req.headers["authorization"].split(" ")[1];
+  try {
+    let { id, username } = verify(authorization, ACCESS_SECRET);
+    console.log(id, username);
+    Models.User.findOne({
+      where: { id, username },
+    })
+      .then((rst) => {
+        if (rst.dataValues) {
+          res.clearCookie("refreshToken");
+          res.status(200).send("signout");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(200).send(err);
+      });
+  } catch {
+    res.status(200).json({ err: "invalid access token" });
+  }
+
+  // res.status(200).send("signout");
 });
 
 module.exports = router;
