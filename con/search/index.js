@@ -37,9 +37,11 @@ router.get("/*", (req, res) => {
                   } = x.dataValues;
                   return { food_id, food_name, food_img, like: counted.length };
                 });
-                res
-                  .status(200)
-                  .json({ data: { recipes: result }, message: "ok" });
+               if (result.length > 0) {
+          res.status(200).json({ data: { recipes: result }, message: "ok" });
+        } else {
+          res.status(200).json({ data: {}, message: "검색 결과가 없습니다." });
+        }
               })
               .catch((err) => {
                 res.status(200).send("fail");
@@ -68,9 +70,12 @@ router.get("/*", (req, res) => {
                   } = x.dataValues;
                   return { food_id, food_name, food_img, like: counted.length };
                 });
-                res
-                  .status(200)
-                  .json({ data: { recipes: result }, message: "ok" });
+        if (result.length > 0) {
+          res.status(200).json({ data: { recipes: result }, message: "ok" });
+        } else {
+          res.status(200).json({ data: {}, message: "검색 결과가 없습니다." });
+
+        }
               })
               .catch((err) => {
                 res.status(200).send("fail");
@@ -96,9 +101,12 @@ router.get("/*", (req, res) => {
                   } = x.dataValues;
                   return { food_id, food_name, food_img, like: counted.length };
                 });
-                res
-                  .status(200)
-                  .json({ data: { recipes: result }, message: "ok" });
+        if (result.length > 0) {
+          res.status(200).json({ data: { recipes: result }, message: "ok" });
+        } else {
+          res.status(200).json({ data: {}, message: "검색 결과가 없습니다." });
+
+        }
               })
               .catch((err) => {
                 console.log(err);
@@ -107,13 +115,16 @@ router.get("/*", (req, res) => {
           } else {
             res.status(400).end("fail");
           }
-        }
+
+
       })
       .catch((err) => {
         res.status(200).send("invalid user");
       });
+
   } catch {
     res.status(200).send("invalid access token");
+
   }
 });
 

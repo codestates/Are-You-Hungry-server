@@ -53,6 +53,16 @@ router.get("/likes*", (req, res) => {
   }
 });
 
+router.post("/like", (req, res) => {
+  try {
+  } catch {
+    res.send("end");
+  }
+
+  // res.status(200).end("get likes");
+  // res.status(500).send("err");
+});
+
 router.get("/uploaded*", (req, res) => {
   const authorization = req.headers["authorization"].split(" ")[1];
   try {
@@ -153,6 +163,11 @@ router.patch("/password", (req, res) => {
   } catch {
     res.status(200).send("invalid access token");
   }
+});
+
+router.get("/recipe", (req, res) => {
+  res.status(200).end("get recipe");
+  res.status(500).send("err");
 });
 
 router.post("/recipe", (req, res) => {
