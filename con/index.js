@@ -107,7 +107,6 @@ router.get("/signout", (req, res) => {
   const authorization = req.headers["authorization"].split(" ")[1];
   try {
     let { id, username } = verify(authorization, ACCESS_SECRET);
-    console.log(id, username);
     Models.User.findOne({
       where: { id, username },
     })
@@ -118,14 +117,11 @@ router.get("/signout", (req, res) => {
         }
       })
       .catch((err) => {
-        console.log(err);
-        res.status(200).send(err);
+        res.status(200).send("invalid user");
       });
   } catch {
-    res.status(200).json({ err: "invalid access token" });
+    res.status(200).send("invalid access token");
   }
-
-  // res.status(200).send("signout");
 });
 
 module.exports = router;
