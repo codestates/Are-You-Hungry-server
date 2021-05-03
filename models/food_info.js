@@ -9,15 +9,31 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      this.belongsTo(models.User, {
+        foreignKey: "user_id",
+      });
+
+      this.hasMany(models.Ingredient, {
+        foreignKey: "food_id",
+      });
+      this.hasMany(models.Recipe, {
+        foreignKey: "food_id",
+      });
+      this.belongsToMany(models.User, {
+        through: models.Likes,
+        as: "counted",
+        foreignKey: "food_id",
+      });
     }
   }
   Food_info.init(
     {
+      food_id: DataTypes.INTEGER,
       user_id: DataTypes.INTEGER,
       food_name: DataTypes.STRING,
       summary: DataTypes.STRING,
-      nation_id: DataTypes.INTEGER,
-      type_id: DataTypes.INTEGER,
+      nation: DataTypes.STRING,
+      type: DataTypes.STRING,
       cooking_time: DataTypes.STRING,
       calorie: DataTypes.STRING,
       qnt: DataTypes.STRING,
