@@ -45,14 +45,25 @@ router.get("/likes*", (req, res) => {
     });
 });
 
-router.post("/like", (req, res) => {
+router.post("/likes", (req, res) => {
   let { id, username } = res.locals;
+  let food_id = req.body.food_id;
   Models.User.findOne({
     where: { id, username },
   })
     .then((rst) => {
       if (rst.dataValues) {
-        res.status(200).end("like");
+        Models.likes
+          .create({
+            food_id: food_id,
+            user_id: user_id,
+          })
+          .then((rst) => {
+            res.status(200).json({ meassge: "created" });
+          })
+          .catch((err) => {
+            res.status(200).send("fail");
+          });
       }
     })
     .catch((err) => {
