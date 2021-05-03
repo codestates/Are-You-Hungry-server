@@ -3,14 +3,15 @@ const express = require("express");
 const router = express.Router();
 const user = require("./user/index");
 const search = require("./search/index");
+const auth = require("./auth");
 const crypto = require("crypto");
 const { sign, verify } = require("jsonwebtoken");
 const ACCESS_SECRET = process.env.ACCESS_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
 const Models = require("../models"); //{  Food_info, Food_type, Igr, Igr_cap, Igr_type, Ingredient, Nation, Recipe, User, like, }
 const { Op } = require("sequelize"); //{Op , ...}
-router.use("/user", user);
-router.use("/search", search);
+router.use("/user", auth, user);
+router.use("/search", auth, search);
 
 router.get("/", (req, res) => {
   res.status(200).send("Hello World");
@@ -39,15 +40,19 @@ router.post("/signin", (req, res) => {
             let { id, username, email, phone, userimage, createdAt } = ans;
             // 난수 추가할것
             const accesstoken = sign(
-              { id, username, random: "test" },
+              { id, username, hash: "test" },
               ACCESS_SECRET,
               {
                 expiresIn: "10m",
               }
             );
-            const refreshtoken = sign({ random: "test" }, REFRESH_SECRET, {
-              expiresIn: "24h",
-            });
+            const refreshtoken = sign(
+              { id, username, hash: "test" },
+              REFRESH_SECRET,
+              {
+                expiresIn: "24h",
+              }
+            );
             res.append("Set-Cookie", `refreshToken=${refreshtoken};`);
             res.status(200).json({
               data: {
