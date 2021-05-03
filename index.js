@@ -4,10 +4,15 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const app = require("./con/index");
 
-server.use(cors());
 server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
-server.use(cors({ exposedHeaders: "*" }));
+server.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+    exposedHeaders: "*",
+  })
+);
 server.use(cookieParser());
 
 const PORT = 4000;
