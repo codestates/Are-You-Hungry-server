@@ -56,7 +56,7 @@ router.use("/", (req, res, next) => {
                 },
               })
                 .then((rst) => {
-                  res.local = { id: decode.id, username: decode.username };
+                  res.locals = { id: decode.id, username: decode.username };
                   next();
                 })
                 .catch((err) => {
