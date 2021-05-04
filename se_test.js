@@ -112,6 +112,7 @@ const seq = require("sequelize");
 //     console.log(err);
 //   });
 
+
 // -----------------------------------
 // let value = "고추";
 
@@ -155,6 +156,151 @@ const seq = require("sequelize");
 //   });
 // });
 
+
+//Models.User.findAll({}).then(console.log).catch(console.log);
+// Models.User.update(
+//   { username: "admin", phone: "000-0000-0000" },
+//   { where: { id: 1 } }
+// );
+
+// Models.Food_info.findAll({
+//   include: [
+//     {
+//       model: Models.Ingredient,
+//     },
+//     {
+//       model: Models.Recipe,
+//     },
+//     {
+//       model: Models.User,
+//       as: "counted",
+//     },
+//     {
+//       model: Models.User,
+//       include: {
+//         model: Models.Food_info,
+//         as: "liked",
+//       },
+//     },
+//   ],
+//   where: { food_id: 1 },
+// }).then((rst) => {
+//   console.log(rst);
+//   let {
+//     food_id,
+//     user_id,
+//     food_name,
+//     summary,
+//     nation,
+//     type,
+//     cooking_time,
+//     calorie,
+//     qnt,
+//     level,
+//     food_img,
+//     createdAt,
+//     updatedAt,
+//     Ingredients,
+//     Recipes,
+//     counted,
+//     User,
+//   } = rst[0].dataValues;
+//   let ulike = rst[0].dataValues.User.liked.reduce((acc, x) => {
+//     acc[x.dataValues.food_id] = true;
+//     return acc;
+//   }, {});
+//   Ingredients = Ingredients.map((x) => {
+//     let { name, type, cap } = x.dataValues;
+//     return { name, type, cap };
+//   });
+//   Recipes = Recipes.map((x) => {
+//     let { cooking_no, cooking_dc, step_image, step_tip } = x.dataValues;
+//     return { cooking_no, cooking_dc, step_image, step_tip };
+//   });
+//   console.log(
+//     food_id,
+//     user_id,
+//     food_name,
+//     summary,
+//     nation,
+//     type,
+//     cooking_time,
+//     calorie,
+//     qnt,
+//     level,
+//     food_img,
+//     createdAt,
+//     updatedAt
+//   );
+//   console.log(Recipes);
+//   console.log(Ingredients);
+//   console.log(counted);
+// });
+let value = "Public_data_portal";
+// Models.User.findAll({
+//   include: [
+//     {
+//       model: Models.Food_info,
+//       as: "liked",
+//     },
+//   ],
+//   where: { username: value },
+// }).then((rst) => {
+//   let result = rst[0].dataValues.liked.map((x) => {
+//     let { food_id, food_name, food_img } = x.dataValues;
+//     console.log(food_id, food_name, food_img);
+//     return { food_id, food_name, food_img };
+//   });
+// });
+
+// Models.User.findAll({
+//   where: { username: value },
+//   include: {
+//     model: Models.Food_info,
+//   },
+// }).then((rst) => {
+//   // for (let i of rst) {
+//   //   console.log(i.dataValues.id, i.dataValues.Food_infos.length);
+//   // }
+//   console.log(rst);
+// });
+
+// Models.Food_info.findAll({
+//   include: {
+//     model: Models.User,
+//     as: "counted",
+//     where: { id: 1 },
+//   },
+// }).then((rst) => {
+//   for (let i of rst) {
+//     console.log(i.dataValues.food_id, i.dataValues.counted.length);
+//   }
+//   // console.log(rst);
+// });
+
+// Models.User.findAll({
+//   include: {
+//     model: Models.Food_info,
+//     as: "liked",
+//   },
+// }).then((rst) => {
+//   for (let i of rst) {
+//     for (j of i.dataValues.liked) {
+//       console.log(
+//         i.dataValues.id,
+//         i.dataValues.liked.length,
+//         j.dataValues.food_id,
+//         j.dataValues
+//       );
+//     }
+//   }
+//   // console.log(rst);
+// });
+// Models.Food_info.findAndCountAll({})
+//   .then((rst) => console.log(rst.count + 1))
+//   .catch(console.log);
+Models.Food_info.max("food_id").then(console.log).catch(console.log);
+
 // Models.User.findAll({}).then(console.log).catch(console.log)
 
 let value = 'public_data_portal';
@@ -173,3 +319,4 @@ Models.User.findAll({
     return { food_id, food_name, food_image };
   });
 });
+

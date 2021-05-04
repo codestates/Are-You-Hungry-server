@@ -3,18 +3,44 @@ const express = require("express");
 const router = express.Router();
 const user = require("./user/index");
 const search = require("./search/index");
+const auth = require("./auth");
 const crypto = require("crypto");
 const { sign, verify } = require("jsonwebtoken");
 const ACCESS_SECRET = process.env.ACCESS_SECRET;
 const REFRESH_SECRET = process.env.REFRESH_SECRET;
 const Models = require("../models"); //{  Food_info, Food_type, Igr, Igr_cap, Igr_type, Ingredient, Nation, Recipe, User, like, }
 const { Op } = require("sequelize"); //{Op , ...}
-router.use("/user", user);
-router.use("/search", search);
-
-router.get("/", (req, res) => {
-  res.status(200).send("Hello World");
+router.use("/user", auth, user);
+router.use("/search", auth, search);
+router.get("/signout", auth, function (req, res) {
+  let { id, username } = res.local;
+  Models.User.findOne({
+    where: { id, username },
+  })
+    .then((rst) => {
+      if (rst.dataValues) {
+        //          res.clearCookie("refreshToken");
+        res.status(200).send("signout");
+      }
+    })
+    .catch((err) => {
+      res.status(200).send("invalid user");
+    });
 });
+
+router.get(
+  "/",
+  (req, res, next) => {
+    console.log(res.locals);
+    res.locals.test = { id: 1, test: "test" };
+    next();
+  },
+  (req, res) => {
+    console.log(res.locals);
+    console.log(res.locals.test);
+    res.status(200).send("Hello World");
+  }
+);
 
 router.post("/signin", (req, res) => {
   let { username } = req.body,
@@ -39,16 +65,20 @@ router.post("/signin", (req, res) => {
             let { id, username, email, phone, userimage, createdAt } = ans;
             // 난수 추가할것
             const accesstoken = sign(
-              { id, username, random: "test" },
+              { id, username, hash: "test" },
               ACCESS_SECRET,
               {
                 expiresIn: "10m",
               }
             );
-            const refreshtoken = sign({ random: "test" }, REFRESH_SECRET, {
-              expiresIn: "24h",
-            });
-            res.append("Set-Cookie", `refreshToken=${refreshtoken};`);
+            // const refreshtoken = sign(
+            //   { id, username, hash: "test" },
+            //   REFRESH_SECRET,
+            //   {
+            //     expiresIn: "24h",
+            //   }
+            // );
+            // res.append("Set-Cookie", `refreshToken=${refreshtoken};`);
             res.status(200).json({
               data: {
                 accessToken: accesstoken,
@@ -100,27 +130,6 @@ router.post("/signup", (req, res) => {
     });
   } catch {
     res.status(400).send("no signup");
-  }
-});
-
-router.get("/signout", (req, res) => {
-  const authorization = req.headers["authorization"].split(" ")[1];
-  try {
-    let { id, username } = verify(authorization, ACCESS_SECRET);
-    Models.User.findOne({
-      where: { id, username },
-    })
-      .then((rst) => {
-        if (rst.dataValues) {
-          res.clearCookie("refreshToken");
-          res.status(200).send("signout");
-        }
-      })
-      .catch((err) => {
-        res.status(200).send("invalid user");
-      });
-  } catch {
-    res.status(200).send("invalid access token");
   }
 });
 
