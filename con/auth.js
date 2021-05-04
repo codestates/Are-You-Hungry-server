@@ -81,8 +81,11 @@ router.use("/", (req, res, next) => {
   verify(accessToken, ACCESS_SECRET, (err, decode2) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
+        const payload = verify(token, ACCESS_SECRET, {
+          ignoreExpiration: true,
+        });
         const accessToken = sign(
-          { id: decode.id, username: decode.username, hash: decode.hash },
+          { id: payload.id, username: payload.username, hash: payload.hash },
           ACCESS_SECRET,
           {
             expiresIn: "15m",
@@ -96,22 +99,18 @@ router.use("/", (req, res, next) => {
         res.status(401).send("Unauthorized");
       }
     } else {
-      if (decode.id === decode2.id && decode.username === decode2.username) {
-        Models.User.findOne({
-          where: {
-            [Op.and]: [{ id: decode.id }, { username: decode.username }],
-          },
+      Models.User.findOne({
+        where: {
+          [Op.and]: [{ id: decode.id }, { username: decode.username }],
+        },
+      })
+        .then((rst) => {
+          res.local = { id: decode.id, username: decode.username };
+          next();
         })
-          .then((rst) => {
-            res.local = { id: decode.id, username: decode.username };
-            next();
-          })
-          .catch((err) => {
-            res.status(200).send("invalid user");
-          });
-      } else {
-        res.status(200).send("invalid user");
-      }
+        .catch((err) => {
+          res.status(200).send("invalid user");
+        });
     }
   });
 });
