@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const server = express();
 const cors = require("cors");
@@ -8,7 +9,7 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: false }));
 server.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", process.env.CLIENT_HOST],
     credentials: true,
     exposedHeaders: "*",
   })
