@@ -1,6 +1,7 @@
 const Models = require("./models");
 const seq = require("sequelize");
-const { Model } = require("sequelize");
+// const { Model } = require("sequelize");
+
 // let [id, username] = [1, "admin"];
 // let value = "public_data_portal";
 // Models.Food_info.findAll({
@@ -110,6 +111,9 @@ const { Model } = require("sequelize");
 //   .catch((err) => {
 //     console.log(err);
 //   });
+
+
+// -----------------------------------
 // let value = "고추";
 
 // Models.Food_info.findAll({
@@ -151,6 +155,7 @@ const { Model } = require("sequelize");
 //     };
 //   });
 // });
+
 
 //Models.User.findAll({}).then(console.log).catch(console.log);
 // Models.User.update(
@@ -295,3 +300,23 @@ let value = "Public_data_portal";
 //   .then((rst) => console.log(rst.count + 1))
 //   .catch(console.log);
 Models.Food_info.max("food_id").then(console.log).catch(console.log);
+
+// Models.User.findAll({}).then(console.log).catch(console.log)
+
+let value = 'public_data_portal';
+
+Models.User.findAll({
+  include: [
+    {
+      model: Models.Food_info,
+    },
+  ],
+  where: { username: value },
+}).then((rst) => {
+  console.log(rst)
+  let result = rst[0].dataValues.map((x) => {
+    let { food_id, food_name, food_image } = x.dataValues;
+    return { food_id, food_name, food_image };
+  });
+});
+
