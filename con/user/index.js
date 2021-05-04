@@ -52,37 +52,27 @@ router.get("/", (req, res) => {
 router.patch("/", (req, res) => {
   let { id, username } = res.local;
 
-  Models.User.findOne({
-    where: { id, username },
-  })
+  Models.User.update(
+    {
+      username: req.body.username,
+      phone: req.body.phone,
+      email: req.body.email,
+      userimage: req.body.userimage,
+    },
+    {
+      where: {
+        [Op.and]: [
+          { id: rst.dataValues.id },
+          { username: rst.dataValues.username },
+        ],
+      },
+    }
+  )
     .then((rst) => {
-      if (rst.dataValues) {
-        Models.User.update(
-          {
-            username: req.body.username,
-            phone: req.body.phone,
-            email: req.body.email,
-            userimage: req.body.userimage,
-          },
-          {
-            where: {
-              [Op.and]: [
-                { id: rst.dataValues.id },
-                { username: rst.dataValues.username },
-              ],
-            },
-          }
-        )
-          .then((rst) => {
-            res.status(200).json({ message: "information updated" });
-          })
-          .catch((err) => {
-            res.status(200).json({ message: "updating fail" });
-          });
-      }
+      res.status(200).json({ message: "information updated" });
     })
     .catch((err) => {
-      res.status(200).send("invalid user");
+      res.status(200).json({ message: "updating fail" });
     });
 });
 

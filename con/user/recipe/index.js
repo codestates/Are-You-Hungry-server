@@ -90,9 +90,6 @@ router.get("/:id", (req, res) => {
 router.post("/", (req, res) => {
   let { id, username } = res.local;
   let { Food_info, Recipe, Ingredients } = req.body;
-  console.log(Food_info);
-  console.log(Recipe);
-  console.log(Ingredients);
   Models.Food_info.max("food_id")
     .then((rst) => {
       let nid = rst + 1;

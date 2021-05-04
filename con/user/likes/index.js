@@ -5,7 +5,7 @@ const Models = require("../../../models");
 const { Op } = require("sequelize");
 
 router.get("/*", (req, res) => {
-  let { id, username } = res.local;
+  let { id, username } = res.locals;
   Models.User.findOne({
     where: { id, username },
   })
@@ -46,28 +46,19 @@ router.get("/*", (req, res) => {
 });
 
 router.post("/", (req, res) => {
-  let { id, username } = res.local;
+  let { id, username } = res.locals;
   let food_id = req.body.food_id;
-  Models.User.findOne({
-    where: { id, username },
-  })
+
+  Models.likes
+    .create({
+      food_id: food_id,
+      user_id: id,
+    })
     .then((rst) => {
-      if (rst.dataValues) {
-        Models.likes
-          .create({
-            food_id: food_id,
-            user_id: user_id,
-          })
-          .then((rst) => {
-            res.status(200).json({ meassge: "created" });
-          })
-          .catch((err) => {
-            res.status(200).send("fail");
-          });
-      }
+      res.status(200).json({ meassge: "created" });
     })
     .catch((err) => {
-      res.status(200).send("invalid user");
+      res.status(200).send("fail");
     });
 });
 
