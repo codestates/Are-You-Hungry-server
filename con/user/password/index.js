@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const Models = require("../../../models");
 const { Op } = require("sequelize");
+const crypto = require("crypto");
 
 router.post("/", (req, res) => {
   let { id, username } = res.local;
@@ -49,22 +50,26 @@ router.patch("/", (req, res) => {
             64,
             "sha512",
             (err, key) => {
-              Models.User.findOne({
-                where: { username: req.body.username },
-              }).then((rst) => {
-                if (rst === null) {
-                  Models.User.update({
-                    password: key.toString("base64"),
-                    password2: buf.toString("base64"),
-                  })
-                    .then((rst) => {
-                      res.status(200).json({ message: "ok" });
-                    })
-                    .catch((err) => {
-                      res.status(200).send("fail");
-                    });
+              Models.User.update(
+                {
+                  password: key.toString("base64"),
+                  password2: buf.toString("base64"),
+                },
+                {
+                  where: {
+                    [Op.and]: [
+                      { id: ans.dataValues.id },
+                      { username: ans.dataValues.username },
+                    ],
+                  },
                 }
-              });
+              )
+                .then((rst) => {
+                  res.status(200).json({ message: "ok" });
+                })
+                .catch((err) => {
+                  res.status(200).send("fail");
+                });
             }
           );
         });

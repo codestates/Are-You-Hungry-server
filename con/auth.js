@@ -81,7 +81,7 @@ router.use("/", (req, res, next) => {
   verify(accessToken, ACCESS_SECRET, (err, decode) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
-        const payload = verify(token, ACCESS_SECRET, {
+        const payload = verify(accessToken, ACCESS_SECRET, {
           ignoreExpiration: true,
         });
 
@@ -103,16 +103,15 @@ router.use("/", (req, res, next) => {
                   expiresIn: "15m",
                 }
               );
+              res.status(200).json({
+                data: { accessToken },
+                message: "give new token",
+              });
             }
           })
           .catch((err) => {
             res.status(200).send("invalid Token");
           });
-
-        res.status(200).json({
-          data: { accessToken },
-          message: "give new token",
-        });
       } else {
         res.status(401).send("Unauthorized");
       }
