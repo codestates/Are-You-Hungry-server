@@ -46,14 +46,14 @@ router.post("/signin", (req, res) => {
                 expiresIn: "10m",
               }
             );
-            const refreshtoken = sign(
-              { id, username, hash: "test" },
-              REFRESH_SECRET,
-              {
-                expiresIn: "24h",
-              }
-            );
-            res.append("Set-Cookie", `refreshToken=${refreshtoken};`);
+            // const refreshtoken = sign(
+            //   { id, username, hash: "test" },
+            //   REFRESH_SECRET,
+            //   {
+            //     expiresIn: "24h",
+            //   }
+            // );
+            // res.append("Set-Cookie", `refreshToken=${refreshtoken};`);
             res.status(200).json({
               data: {
                 accessToken: accesstoken,
@@ -117,7 +117,7 @@ router.get("/signout", (req, res) => {
     })
       .then((rst) => {
         if (rst.dataValues) {
-          res.clearCookie("refreshToken");
+          //          res.clearCookie("refreshToken");
           res.status(200).send("signout");
         }
       })
