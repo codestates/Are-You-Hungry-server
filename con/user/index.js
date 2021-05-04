@@ -30,8 +30,8 @@ router.get("/likes*", (req, res) => {
                 where: { username: value },
               }).then((rst) => {
                 let result = rst[0].dataValues.liked.map((x) => {
-                  let { food_id, food_name, food_image } = x.dataValues;
-                  return { food_id, food_name, food_image };
+                  let { food_id, food_name, food_img } = x.dataValues;
+                  return { food_id, food_name, food_img };
                 });
                 res.status(200).json({ data: result, message: "0k" });
               });
@@ -84,7 +84,30 @@ router.get("/uploaded*", (req, res) => {
     })
       .then((rst) => {
         if (rst.dataValues) {
-          res.status(200).end("get uploaded");
+          try {
+            let [type, value] = req.url.split("?")[1].split("=");
+            value = decodeURI(value);
+            if (type === "username") {
+              Models.User.findAll({
+                include: [
+                  {
+                    model: Models.Food_info,
+                  },
+                ],
+                where: { username: value },
+              }).then((rst) => {
+                let result = rst[0].dataValues.Food_infos.map((x) => {
+                  let { food_id, food_name, food_img } = x.dataValues;
+                  return { food_id, food_name, food_img };
+                });
+                res.status(200).json({ data: result, message: "0k" });
+              });
+            } else {
+              res.send("end");
+            }
+          } catch {
+            res.send("end");
+          }
         }
       })
       .catch((err) => {
