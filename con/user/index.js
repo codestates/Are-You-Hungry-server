@@ -11,121 +11,6 @@ router.use("/likes", likes_router);
 router.use("/password", password_router);
 router.use("/recipe", recipe_router);
 
-router.get("/likes*", (req, res) => {
-  const authorization = req.headers["authorization"].split(" ")[1];
-  try {
-    let { id, username } = verify(authorization, ACCESS_SECRET);
-    Models.User.findOne({
-      where: { id, username },
-    })
-      .then((rst) => {
-        if (rst.dataValues) {
-          try {
-            let [type, value] = req.url.split("?")[1].split("=");
-            value = decodeURI(value);
-            if (type === "username") {
-              Models.User.findAll({
-                include: [
-                  {
-                    model: Models.Food_info,
-                    as: "liked",
-                  },
-                ],
-                where: { username: value },
-              }).then((rst) => {
-                let result = rst[0].dataValues.liked.map((x) => {
-                  let { food_id, food_name, food_img } = x.dataValues;
-                  return { food_id, food_name, food_img };
-                });
-                res.status(200).json({ data: result, message: "0k" });
-              });
-            } else if (type === "foodname") {
-              res.send("end");
-            } else {
-              res.send("end");
-            }
-          } catch {
-            res.send("end");
-          }
-        }
-      })
-      .catch((err) => {
-        res.status(200).send("invalid user");
-      });
-  } catch {
-    res.status(200).send("invalid access token");
-  }
-});
-
-router.post("/like", (req, res) => {
-  const authorization = req.headers["authorization"].split(" ")[1];
-  try {
-    let { id, username } = verify(authorization, ACCESS_SECRET);
-    Models.User.findOne({
-      where: { id, username },
-    })
-      .then((rst) => {
-        if (rst.dataValues) {
-          res.status(200).end("like");
-        }
-      })
-      .catch((err) => {
-        res.status(200).send("invalid user");
-      });
-  } catch {
-    res.status(200).send("invalid access token");
-  }
-  // res.status(200).end("get likes");
-  // res.status(500).send("err");
-});
-
-
-router.get("/uploaded*", (req, res) => {
-  let { id, username } = res.local;
-  Models.User.findOne({
-    where: { id, username },
-  })
-    .then((rst) => {
-      if (rst.dataValues) {
-        res.status(200).end("get uploaded");
-      }
-    })
-      .then((rst) => {
-        if (rst.dataValues) {
-          try {
-            let [type, value] = req.url.split("?")[1].split("=");
-            value = decodeURI(value);
-            if (type === "username") {
-              Models.User.findAll({
-                include: [
-                  {
-                    model: Models.Food_info,
-                  },
-                ],
-                where: { username: value },
-              }).then((rst) => {
-                let result = rst[0].dataValues.Food_infos.map((x) => {
-                  let { food_id, food_name, food_img } = x.dataValues;
-                  return { food_id, food_name, food_img };
-                });
-                res.status(200).json({ data: result, message: "0k" });
-              });
-            } else {
-              res.send("end");
-            }
-          } catch {
-            res.send("end");
-          }
-        }
-      })
-      .catch((err) => {
-        res.status(200).send("invalid user");
-      });
-  } catch {
-    res.status(200).send("invalid access token");
-  }
-});
-
 router.get("/", (req, res) => {
   let { id, username } = res.local;
   Models.User.findOne({
@@ -208,6 +93,49 @@ router.delete("/", (req, res) => {
           .catch((err) => {
             res.status(200).json({ message: "fail" });
           });
+      }
+    })
+    .catch((err) => {
+      res.status(200).send("invalid user");
+    });
+});
+
+router.get("/uploaded*", (req, res) => {
+  let { id, username } = res.local;
+  Models.User.findOne({
+    where: { id, username },
+  })
+    .then((rst) => {
+      if (rst.dataValues) {
+        res.status(200).end("get uploaded");
+      }
+    })
+    .then((rst) => {
+      if (rst.dataValues) {
+        try {
+          let [type, value] = req.url.split("?")[1].split("=");
+          value = decodeURI(value);
+          if (type === "username") {
+            Models.User.findAll({
+              include: [
+                {
+                  model: Models.Food_info,
+                },
+              ],
+              where: { username: value },
+            }).then((rst) => {
+              let result = rst[0].dataValues.Food_infos.map((x) => {
+                let { food_id, food_name, food_img } = x.dataValues;
+                return { food_id, food_name, food_img };
+              });
+              res.status(200).json({ data: result, message: "0k" });
+            });
+          } else {
+            res.send("end");
+          }
+        } catch {
+          res.send("end");
+        }
       }
     })
     .catch((err) => {
