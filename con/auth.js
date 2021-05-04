@@ -78,19 +78,37 @@ router.use("/", (req, res, next) => {
     req.headers["authorization"].split(" ").length === 2
       ? req.headers["authorization"].split(" ")[1]
       : undefined;
-  verify(accessToken, ACCESS_SECRET, (err, decode2) => {
+  verify(accessToken, ACCESS_SECRET, (err, decode) => {
     if (err) {
       if (err.name === "TokenExpiredError") {
         const payload = verify(token, ACCESS_SECRET, {
           ignoreExpiration: true,
         });
-        const accessToken = sign(
-          { id: payload.id, username: payload.username, hash: payload.hash },
-          ACCESS_SECRET,
-          {
-            expiresIn: "15m",
-          }
-        );
+
+        Models.User.findOne({
+          where: {
+            [Op.and]: [{ id: payload.id }, { username: payload.username }],
+          },
+        })
+          .then((rst) => {
+            if (rst.dataValues) {
+              const accessToken = sign(
+                {
+                  id: payload.id,
+                  username: payload.username,
+                  hash: payload.hash,
+                },
+                ACCESS_SECRET,
+                {
+                  expiresIn: "15m",
+                }
+              );
+            }
+          })
+          .catch((err) => {
+            res.status(200).send("invalid Token");
+          });
+
         res.status(200).json({
           data: { accessToken },
           message: "give new token",
