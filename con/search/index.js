@@ -5,7 +5,7 @@ const Models = require("../../models");
 const { Op } = require("sequelize");
 
 router.get("/*", (req, res) => {
-  let { id, username } = res.locals;
+  let { id, username } = res.local;
 
   Models.User.findOne({
     where: { id, username },
