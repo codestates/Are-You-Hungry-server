@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const router = express.Router();
 const Models = require("../../../models");
-const { Op } = require("sequelize");
+const { Op, Model } = require("sequelize");
 
 router.get("/:id", (req, res) => {
   let { id } = res.local;
@@ -59,7 +59,7 @@ router.get("/:id", (req, res) => {
           return { cooking_no, cooking_dc, step_image, step_tip };
         });
         let data = {
-          food_info: {
+          Food_info: {
             food_id,
             user_id,
             food_name,
@@ -89,31 +89,66 @@ router.get("/:id", (req, res) => {
 
 router.post("/", (req, res) => {
   let { id, username } = res.local;
-  Models.User.findOne({
-    where: { id, username },
-  })
+  let { Food_info, Recipe, Ingredients } = req.body;
+  console.log(Food_info);
+  console.log(Recipe);
+  console.log(Ingredients);
+  Models.Food_info.max("food_id")
     .then((rst) => {
-      if (rst.dataValues) {
-        res.status(200).end("add recipe");
-      }
+      let nid = rst + 1;
+      Models.Food_info.create({
+        ...Food_info,
+        user_id: id,
+        food_id: nid,
+      });
+      return nid;
+    })
+    .then((nid) => {
+      Recipe = Recipe.map((x) => {
+        return { ...x, food_id: nid };
+      });
+      Models.Recipe.bulkCreate(Recipe);
+      return nid;
+    })
+    .then((nid) => {
+      Ingredients = Ingredients.map((x) => {
+        return { ...x, food_id: nid };
+      });
+      Models.Ingredient.bulkCreate(Ingredients);
+    })
+    .then(() => {
+      res.status(200).json({ message: "ok" });
     })
     .catch((err) => {
-      res.status(200).send("invalid user");
+      res.status(200).send("fail");
     });
 });
 
 router.patch("/", (req, res) => {
   let { id, username } = res.local;
-  Models.User.findOne({
-    where: { id, username },
+  Models.Food_info.findAll({
+    where: { [Op.and]: [{ user_id: id }, { food_id: req.food_id }] },
   })
-    .then((rst) => {
-      if (rst.dataValues) {
-        res.status(200).end("update recipe");
-      }
+    .then(() => {
+      Models.Food_info.create({
+        ...req.body.Food_info,
+      });
+    })
+    .then(() => {
+      Models.Recipe.create({
+        ...req.body.Recipe,
+      });
+    })
+    .then(() => {
+      Models.Ingredient.create({
+        ...req.body.Ingredient,
+      });
+    })
+    .then(() => {
+      res.status(200).json({ message: "ok" });
     })
     .catch((err) => {
-      res.status(200).send("invalid user");
+      res.status(200).send("fail");
     });
 });
 

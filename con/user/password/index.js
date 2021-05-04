@@ -6,6 +6,7 @@ const { Op } = require("sequelize");
 const crypto = require("crypto");
 
 router.post("/", (req, res) => {
+  console.log(res.locals);
   let { id, username } = res.local;
   Models.User.findOne({
     where: { id, username },
