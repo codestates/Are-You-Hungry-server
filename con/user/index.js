@@ -6,128 +6,15 @@ const { Op } = require("sequelize");
 const likes_router = require("./likes/index");
 const password_router = require("./password/index");
 const recipe_router = require("./recipe/index");
+const uploaded_router = require("./uploaded");
 
 router.use("/likes", likes_router);
 router.use("/password", password_router);
 router.use("/recipe", recipe_router);
-
-router.get("/likes*", (req, res) => {
-  const authorization = req.headers["authorization"].split(" ")[1];
-  try {
-    let { id, username } = verify(authorization, ACCESS_SECRET);
-    Models.User.findOne({
-      where: { id, username },
-    })
-      .then((rst) => {
-        if (rst.dataValues) {
-          try {
-            let [type, value] = req.url.split("?")[1].split("=");
-            value = decodeURI(value);
-            if (type === "username") {
-              Models.User.findAll({
-                include: [
-                  {
-                    model: Models.Food_info,
-                    as: "liked",
-                  },
-                ],
-                where: { username: value },
-              }).then((rst) => {
-                let result = rst[0].dataValues.liked.map((x) => {
-                  let { food_id, food_name, food_img } = x.dataValues;
-                  return { food_id, food_name, food_img };
-                });
-                res.status(200).json({ data: result, message: "0k" });
-              });
-            } else if (type === "foodname") {
-              res.send("end");
-            } else {
-              res.send("end");
-            }
-          } catch {
-            res.send("end");
-          }
-        }
-      })
-      .catch((err) => {
-        res.status(200).send("invalid user");
-      });
-  } catch {
-    res.status(200).send("invalid access token");
-  }
-});
-
-router.post("/like", (req, res) => {
-  const authorization = req.headers["authorization"].split(" ")[1];
-  try {
-    let { id, username } = verify(authorization, ACCESS_SECRET);
-    Models.User.findOne({
-      where: { id, username },
-    })
-      .then((rst) => {
-        if (rst.dataValues) {
-          res.status(200).end("like");
-        }
-      })
-      .catch((err) => {
-        res.status(200).send("invalid user");
-      });
-  } catch {
-    res.status(200).send("invalid access token");
-  }
-  // res.status(200).end("get likes");
-  // res.status(500).send("err");
-});
-
-
-router.get("/uploaded*", (req, res) => {
-  let { id, username } = res.local;
-  Models.User.findOne({
-    where: { id, username },
-  })
-    .then((rst) => {
-      if (rst.dataValues) {
-        res.status(200).end("get uploaded");
-      }
-    })
-      .then((rst) => {
-        if (rst.dataValues) {
-          try {
-            let [type, value] = req.url.split("?")[1].split("=");
-            value = decodeURI(value);
-            if (type === "username") {
-              Models.User.findAll({
-                include: [
-                  {
-                    model: Models.Food_info,
-                  },
-                ],
-                where: { username: value },
-              }).then((rst) => {
-                let result = rst[0].dataValues.Food_infos.map((x) => {
-                  let { food_id, food_name, food_img } = x.dataValues;
-                  return { food_id, food_name, food_img };
-                });
-                res.status(200).json({ data: result, message: "0k" });
-              });
-            } else {
-              res.send("end");
-            }
-          } catch {
-            res.send("end");
-          }
-        }
-      })
-      .catch((err) => {
-        res.status(200).send("invalid user");
-      });
-  } catch {
-    res.status(200).send("invalid access token");
-  }
-});
+router.use("/uploaded", uploaded_router);
 
 router.get("/", (req, res) => {
-  let { id, username } = res.local;
+  let { id, username } = res.locals;
   Models.User.findOne({
     where: { id, username },
   })
@@ -141,16 +28,16 @@ router.get("/", (req, res) => {
           meassge: "ok",
         });
       } else {
-        res.status(200).send("invalid user");
+        res.status(400).send("fail");
       }
     })
     .catch((err) => {
-      res.status(200).send("invalid user");
+      res.status(400).send("fail");
     });
 });
 
 router.patch("/", (req, res) => {
-  let { id, username } = res.local;
+  let { id, username } = res.locals;
 
   Models.User.update(
     {
@@ -161,10 +48,7 @@ router.patch("/", (req, res) => {
     },
     {
       where: {
-        [Op.and]: [
-          { id: rst.dataValues.id },
-          { username: rst.dataValues.username },
-        ],
+        [Op.and]: [{ id: id }, { username: username }],
       },
     }
   )
@@ -172,46 +56,34 @@ router.patch("/", (req, res) => {
       res.status(200).json({ message: "information updated" });
     })
     .catch((err) => {
-      res.status(200).json({ message: "updating fail" });
+      res.status(400).send("fail");
     });
 });
 
 router.delete("/", (req, res) => {
-  let { id, username } = res.local;
-  Models.User.findOne({
-    where: { id, username },
-  })
+  let { id, username } = res.locals;
+
+  Models.User.update(
+    {
+      username: "Deleted User",
+      password: "",
+      password2: "",
+      phone: "",
+      email: "",
+      userimage: "",
+    },
+    {
+      where: {
+        [Op.and]: [{ id: id }, { username: username }],
+      },
+    }
+  )
     .then((rst) => {
-      if (rst.dataValues) {
-        Models.User.update(
-          {
-            username: "Deleted User",
-            password: "",
-            password2: "",
-            phone: "",
-            email: "",
-            userimage: "",
-          },
-          {
-            where: {
-              [Op.and]: [
-                { id: rst.dataValues.id },
-                { username: rst.dataValues.username },
-              ],
-            },
-          }
-        )
-          .then((rst) => {
-            res.clearCookie("refreshToken");
-            res.status(200).json({ message: "He (or She)'s gone" });
-          })
-          .catch((err) => {
-            res.status(200).json({ message: "fail" });
-          });
-      }
+      //            res.clearCookie("refreshToken");
+      res.status(200).json({ message: "He (or She)'s gone" });
     })
     .catch((err) => {
-      res.status(200).send("invalid user");
+      res.status(400).send("fail");
     });
 });
 

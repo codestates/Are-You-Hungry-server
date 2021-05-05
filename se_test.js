@@ -112,7 +112,6 @@ const seq = require("sequelize");
 //     console.log(err);
 //   });
 
-
 // -----------------------------------
 // let value = "고추";
 
@@ -155,7 +154,6 @@ const seq = require("sequelize");
 //     };
 //   });
 // });
-
 
 //Models.User.findAll({}).then(console.log).catch(console.log);
 // Models.User.update(
@@ -236,7 +234,7 @@ const seq = require("sequelize");
 //   console.log(Ingredients);
 //   console.log(counted);
 // });
-let value = "Public_data_portal";
+// let value = "Public_data_portal";
 // Models.User.findAll({
 //   include: [
 //     {
@@ -299,24 +297,57 @@ let value = "Public_data_portal";
 // Models.Food_info.findAndCountAll({})
 //   .then((rst) => console.log(rst.count + 1))
 //   .catch(console.log);
-Models.Food_info.max("food_id").then(console.log).catch(console.log);
+// Models.Food_info.max("food_id").then(console.log).catch(console.log);
 
-// Models.User.findAll({}).then(console.log).catch(console.log)
+// // Models.User.findAll({}).then(console.log).catch(console.log)
 
-let value = 'public_data_portal';
+// let value = 'public_data_portal';
 
-Models.User.findAll({
+// Models.User.findAll({
+//   include: [
+//     {
+//       model: Models.Food_info,
+//     },
+//   ],
+//   where: { username: value },
+// }).then((rst) => {
+//   console.log(rst)
+//   let result = rst[0].dataValues.map((x) => {
+//     let { food_id, food_name, food_image } = x.dataValues;
+//     return { food_id, food_name, food_image };
+//   });
+// });
+
+let value = "public_data_portal";
+
+Models.User.findOne({
   include: [
     {
       model: Models.Food_info,
+      include: [
+        {
+          model: Models.User,
+          as: "counted",
+        },
+      ],
     },
   ],
   where: { username: value },
-}).then((rst) => {
-  console.log(rst)
-  let result = rst[0].dataValues.map((x) => {
-    let { food_id, food_name, food_image } = x.dataValues;
-    return { food_id, food_name, food_image };
-  });
-});
+})
+  .then((rst) => {
+    // console.log(rst.dataValues.liked);
+    let result = rst.dataValues.Food_infos.map((x) => {
+      let { food_id, food_name, food_img, counted } = x.dataValues;
+      if (counted.length > 0 ? true : false) {
+        console.log(food_id, food_name, food_img);
+      }
 
+      return {
+        food_id,
+        food_name,
+        food_img,
+        isOn: counted.length > 0 ? true : false,
+      };
+    });
+  })
+  .catch((err) => {});
