@@ -25,6 +25,7 @@ router.post("/", (req, res) => {
 });
 
 router.patch("/", (req, res) => {
+  let { id, username } = res.locals;
   crypto.randomBytes(64, (err, buf) => {
     crypto.pbkdf2(
       req.body.password,
@@ -43,10 +44,7 @@ router.patch("/", (req, res) => {
             },
             {
               where: {
-                [Op.and]: [
-                  { id: ans.dataValues.id },
-                  { username: ans.dataValues.username },
-                ],
+                [Op.and]: [{ id: id }, { username: username }],
               },
             }
           )
