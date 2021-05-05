@@ -97,12 +97,17 @@ router.post("/", (req, res) => {
         ...Food_info,
         user_id: id,
         food_id: nid,
+        food_img: Food_info.food_img ? Food_info.food_img : "",
       });
       return nid;
     })
     .then((nid) => {
       Recipe = Recipe.map((x) => {
-        return { ...x, food_id: nid };
+        return {
+          ...x,
+          food_id: nid,
+          step_image: Recipe.step_image ? Recipe.step_image : "",
+        };
       });
       Models.Recipe.bulkCreate(Recipe);
       return nid;
