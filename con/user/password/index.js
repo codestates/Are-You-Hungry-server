@@ -6,22 +6,31 @@ const { Op } = require("sequelize");
 const crypto = require("crypto");
 
 router.post("/", (req, res) => {
-  crypto.pbkdf2(
-    req.body.password,
-    ans.dataValues.password2,
-    120900,
-    64,
-    "sha512",
-    (err, key) => {
-      if (ans.dataValues.password === key.toString("base64")) {
-        res.status(200).json({
-          message: "ok",
-        });
-      } else {
-        res.status(400).json({ message: "fail" });
-      }
-    }
-  );
+  let { id } = res.locals;
+  Models.Users.findOne({
+    where: { id: id },
+  })
+    .then((ans) => {
+      crypto.pbkdf2(
+        req.body.password,
+        ans.dataValues.password2,
+        120900,
+        64,
+        "sha512",
+        (err, key) => {
+          if (!err && ans.dataValues.password === key.toString("base64")) {
+            res.status(200).json({
+              message: "ok",
+            });
+          } else {
+            res.status(400).json({ message: "fail" });
+          }
+        }
+      );
+    })
+    .catch((err) => {
+      res.status(400).json({ message: "fail" });
+    });
 });
 
 router.patch("/", (req, res) => {

@@ -13,7 +13,7 @@ const { Op } = require("sequelize"); //{Op , ...}
 router.use("/user", auth, user);
 router.use("/search", auth, search);
 router.get("/signout", auth, function (req, res) {
-  let { id, username } = res.local;
+  let { id, username } = res.locals;
   Models.User.findOne({
     where: { id, username },
   })
