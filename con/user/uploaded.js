@@ -7,20 +7,33 @@ router.get("/:username", (req, res) => {
   let { id, username } = res.locals;
   let value = req.url.slice(1);
   value = decodeURI(value);
-  Models.User.findAll({
+  Models.User.findOne({
     include: [
       {
         model: Models.Food_info,
+        include: [
+          {
+            model: Models.User,
+            as: "counted",
+          },
+        ],
       },
     ],
     where: { username: value },
   })
     .then((rst) => {
-      let result = rst[0].dataValues.Food_infos.map((x) => {
-        let { food_id, food_name, food_img } = x.dataValues;
-        return { food_id, food_name, food_img };
+      // console.log(rst.dataValues.liked);
+      let result = rst.dataValues.Food_infos.map((x) => {
+        let { food_id, food_name, food_img, counted } = x.dataValues;
+
+        return {
+          food_id,
+          food_name,
+          food_img,
+          isOn: counted.length > 0 ? true : false,
+        };
       });
-      res.status(200).json({ data: result, message: "0k" });
+      res.status(200).json({ data: result, meassage: "ok" });
     })
     .catch((err) => {
       res.status(400).send("fail");
