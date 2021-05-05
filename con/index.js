@@ -21,10 +21,12 @@ router.get("/signout", auth, function (req, res) {
       if (rst.dataValues) {
         //          res.clearCookie("refreshToken");
         res.status(200).send("signout");
+      } else {
+        res.status(400).send("signout fail");
       }
     })
     .catch((err) => {
-      res.status(200).send("invalid user");
+      res.status(400).send("signout fail");
     });
 });
 

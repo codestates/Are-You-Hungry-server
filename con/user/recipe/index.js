@@ -5,9 +5,9 @@ const Models = require("../../../models");
 const { Op, Model } = require("sequelize");
 
 router.get("/:id", (req, res) => {
-  let { id } = res.local;
+  let { id } = res.locals;
   if (isNaN(req.url.slice(1))) {
-    res.status(200).send("wrong");
+    res.status(400).send("fail");
   } else {
     let tfood = Number(req.url.slice(1));
     Models.Food_info.findAll({
@@ -82,13 +82,13 @@ router.get("/:id", (req, res) => {
         res.status(200).json({ data, message: "ok" });
       })
       .catch((err) => {
-        res.status(200).send("fail");
+        res.status(400).send("fail");
       });
   }
 });
 
 router.post("/", (req, res) => {
-  let { id, username } = res.local;
+  let { id, username } = res.locals;
   let { Food_info, Recipe, Ingredients } = req.body;
   Models.Food_info.max("food_id")
     .then((rst) => {
@@ -122,7 +122,7 @@ router.post("/", (req, res) => {
 });
 
 router.patch("/", (req, res) => {
-  let { id, username } = res.local;
+  let { id, username } = res.locals;
   Models.Food_info.findAll({
     where: { [Op.and]: [{ user_id: id }, { food_id: req.food_id }] },
   })
@@ -145,7 +145,7 @@ router.patch("/", (req, res) => {
       res.status(200).json({ message: "ok" });
     })
     .catch((err) => {
-      res.status(200).send("fail");
+      res.status(400).send("fail");
     });
 });
 
