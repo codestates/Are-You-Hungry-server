@@ -7,7 +7,7 @@ const crypto = require("crypto");
 
 router.post("/", (req, res) => {
   let { id } = res.locals;
-  Models.Users.findOne({
+  Models.User.findOne({
     where: { id: id },
   })
     .then((ans) => {
