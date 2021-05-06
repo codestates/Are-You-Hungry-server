@@ -8,6 +8,8 @@ const password_router = require("./password/index");
 const recipe_router = require("./recipe/index");
 const uploaded_router = require("./uploaded");
 
+const crypto = require("crypto");
+
 router.use("/likes", likes_router);
 router.use("/password", password_router);
 router.use("/recipe", recipe_router);
@@ -38,26 +40,60 @@ router.get("/", (req, res) => {
 
 router.patch("/", (req, res) => {
   let { id, username } = res.locals;
-
-  Models.User.update(
-    {
-      username: req.body.username,
-      phone: req.body.phone,
-      email: req.body.email,
-      userimage: req.body.userimage,
-    },
-    {
-      where: {
-        [Op.and]: [{ id: id }, { username: username }],
-      },
-    }
-  )
-    .then((rst) => {
-      res.status(200).json({ message: "information updated" });
-    })
-    .catch((err) => {
+  console.log(id, username);
+  console.log(req.body);
+  if (req.body.password) {
+    try {
+      crypto.randomBytes(64, (err, buf) => {
+        crypto.pbkdf2(
+          req.body.password,
+          buf.toString("base64"),
+          120900,
+          64,
+          "sha512",
+          (err, key) => {
+            Models.User.update(
+              {
+                ...req.body,
+                password: key.toString("base64"),
+                password2: buf.toString("base64"),
+              },
+              {
+                where: {
+                  [Op.and]: [{ id: id }, { username: username }],
+                },
+              }
+            )
+              .then((rst) => {
+                res.status(200).json({ message: "information updated" });
+              })
+              .catch((err) => {
+                res.status(400).send("fail");
+              });
+          }
+        );
+      });
+    } catch {
       res.status(400).send("fail");
-    });
+    }
+  } else {
+    Models.User.update(
+      {
+        ...req.body,
+      },
+      {
+        where: {
+          [Op.and]: [{ id: id }, { username: username }],
+        },
+      }
+    )
+      .then((rst) => {
+        res.status(200).json({ message: "information updated" });
+      })
+      .catch((err) => {
+        res.status(400).send("fail");
+      });
+  }
 });
 
 router.delete("/", (req, res) => {
