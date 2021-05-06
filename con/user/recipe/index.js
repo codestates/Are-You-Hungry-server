@@ -122,7 +122,7 @@ router.post("/", (req, res) => {
       res.status(200).json({ message: "ok" });
     })
     .catch((err) => {
-      res.status(200).send("fail");
+      res.status(400).send("fail");
     });
 });
 

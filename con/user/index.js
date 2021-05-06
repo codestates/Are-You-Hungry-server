@@ -41,10 +41,7 @@ router.patch("/", (req, res) => {
 
   Models.User.update(
     {
-      username: req.body.username,
-      phone: req.body.phone,
-      email: req.body.email,
-      userimage: req.body.userimage,
+      ...req.body,
     },
     {
       where: {
