@@ -8,6 +8,8 @@ const password_router = require("./password/index");
 const recipe_router = require("./recipe/index");
 const uploaded_router = require("./uploaded");
 
+const crypto = require("crypto");
+
 router.use("/likes", likes_router);
 router.use("/password", password_router);
 router.use("/recipe", recipe_router);
@@ -38,7 +40,8 @@ router.get("/", (req, res) => {
 
 router.patch("/", (req, res) => {
   let { id, username } = res.locals;
-
+  console.log(id, username);
+  console.log(req.body);
   if (req.body.password) {
     try {
       crypto.randomBytes(64, (err, buf) => {
