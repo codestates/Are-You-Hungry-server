@@ -30,7 +30,7 @@ router.get("/:username", (req, res) => {
 
 router.post("/", (req, res) => {
   let { id, username } = res.locals;
-  let food_id = req.body.food_id;
+  let food_id = Number(req.body.food_id);
 
   Models.likes
     .create({
@@ -39,6 +39,22 @@ router.post("/", (req, res) => {
     })
     .then((rst) => {
       res.status(200).json({ meassge: "created" });
+    })
+    .catch((err) => {
+      res.status(400).send("fail");
+    });
+});
+
+router.delete("/", (req, res) => {
+  let { id, username } = res.locals;
+  let food_id = Number(req.body.food_id);
+  Models.Likes.destroy({
+    where: {
+      [Op.and]: [{ food_id: food_id }, { user_id: id }],
+    },
+  })
+    .then((rst) => {
+      res.status(200).json({ meassge: "removed" });
     })
     .catch((err) => {
       res.status(400).send("fail");
