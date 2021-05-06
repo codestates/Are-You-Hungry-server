@@ -39,16 +39,16 @@ router.get("/", (req, res) => {
 router.patch("/", (req, res) => {
   let { id, username } = res.locals;
 
-  try {
-    crypto.randomBytes(64, (err, buf) => {
-      crypto.pbkdf2(
-        req.body.password,
-        buf.toString("base64"),
-        120900,
-        64,
-        "sha512",
-        (err, key) => {
-          Models.User.findOne({ where: { username: username } }).then((rst) => {
+  if (req.body.password) {
+    try {
+      crypto.randomBytes(64, (err, buf) => {
+        crypto.pbkdf2(
+          req.body.password,
+          buf.toString("base64"),
+          120900,
+          64,
+          "sha512",
+          (err, key) => {
             Models.User.update(
               {
                 ...req.body,
@@ -67,12 +67,29 @@ router.patch("/", (req, res) => {
               .catch((err) => {
                 res.status(400).send("fail");
               });
-          });
-        }
-      );
-    });
-  } catch {
-    res.status(400).send("fail");
+          }
+        );
+      });
+    } catch {
+      res.status(400).send("fail");
+    }
+  } else {
+    Models.User.update(
+      {
+        ...req.body,
+      },
+      {
+        where: {
+          [Op.and]: [{ id: id }, { username: username }],
+        },
+      }
+    )
+      .then((rst) => {
+        res.status(200).json({ message: "information updated" });
+      })
+      .catch((err) => {
+        res.status(400).send("fail");
+      });
   }
 });
 
