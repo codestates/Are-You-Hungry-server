@@ -48,28 +48,26 @@ router.patch("/", (req, res) => {
         64,
         "sha512",
         (err, key) => {
-          Models.User.findOne({ where: { username: req.body.username } }).then(
-            (rst) => {
-              Models.User.update(
-                {
-                  ...req.body,
-                  password: key.toString("base64"),
-                  password2: buf.toString("base64"),
+          Models.User.findOne({ where: { username: username } }).then((rst) => {
+            Models.User.update(
+              {
+                ...req.body,
+                password: key.toString("base64"),
+                password2: buf.toString("base64"),
+              },
+              {
+                where: {
+                  [Op.and]: [{ id: id }, { username: username }],
                 },
-                {
-                  where: {
-                    [Op.and]: [{ id: id }, { username: username }],
-                  },
-                }
-              )
-                .then((rst) => {
-                  res.status(200).json({ message: "information updated" });
-                })
-                .catch((err) => {
-                  res.status(400).send("fail");
-                });
-            }
-          );
+              }
+            )
+              .then((rst) => {
+                res.status(200).json({ message: "information updated" });
+              })
+              .catch((err) => {
+                res.status(400).send("fail");
+              });
+          });
         }
       );
     });
