@@ -14,9 +14,11 @@ router.get("/:id", (req, res) => {
       include: [
         {
           model: Models.Ingredient,
+          on: { food_id: tfood },
         },
         {
           model: Models.Recipe,
+          on: { food_id: tfood },
         },
         {
           model: Models.User,

@@ -318,36 +318,112 @@ const seq = require("sequelize");
 //   });
 // });
 
-let value = "public_data_portal";
+// let value = "public_data_portal";
 
-Models.User.findOne({
+// Models.User.findOne({
+//   include: [
+//     {
+//       model: Models.Food_info,
+//       include: [
+//         {
+//           model: Models.User,
+//           as: "counted",
+//         },
+//       ],
+//     },
+//   ],
+//   where: { username: value },
+// })
+//   .then((rst) => {
+//     // console.log(rst.dataValues.liked);
+//     let result = rst.dataValues.Food_infos.map((x) => {
+//       let { food_id, food_name, food_img, counted } = x.dataValues;
+//       if (counted.length > 0 ? true : false) {
+//         console.log(food_id, food_name, food_img);
+//       }
+
+//       return {
+//         food_id,
+//         food_name,
+//         food_img,
+//         isOn: counted.length > 0 ? true : false,
+//       };
+//     });
+//   })
+//   .catch((err) => {});
+
+let tfood = 195454;
+Models.Food_info.findAll({
   include: [
     {
-      model: Models.Food_info,
-      include: [
-        {
-          model: Models.User,
-          as: "counted",
-        },
-      ],
+      model: Models.Ingredient,
+      on: { food_id: tfood },
+    },
+    {
+      model: Models.Recipe,
+      on: { food_id: tfood },
+    },
+    {
+      model: Models.User,
+      as: "counted",
     },
   ],
-  where: { username: value },
+  where: { food_id: tfood },
 })
   .then((rst) => {
-    // console.log(rst.dataValues.liked);
-    let result = rst.dataValues.Food_infos.map((x) => {
-      let { food_id, food_name, food_img, counted } = x.dataValues;
-      if (counted.length > 0 ? true : false) {
-        console.log(food_id, food_name, food_img);
+    let {
+      food_id,
+      user_id,
+      food_name,
+      summary,
+      nation,
+      type,
+      cooking_time,
+      calorie,
+      qnt,
+      level,
+      food_img,
+      createdAt,
+      updatedAt,
+      Ingredients,
+      Recipes,
+      counted,
+    } = rst[0].dataValues;
+    let ulike = false;
+    counted.forEach((x) => {
+      if (x.dataValues.id === id) {
+        ulike = true;
       }
-
-      return {
-        food_id,
-        food_name,
-        food_img,
-        isOn: counted.length > 0 ? true : false,
-      };
     });
+    Ingredients = Ingredients.map((x) => {
+      let { name, type, cap } = x.dataValues;
+      return { name, type, cap };
+    });
+    Recipes = Recipes.map((x) => {
+      let { cooking_no, cooking_dc, step_image, step_tip } = x.dataValues;
+      return { cooking_no, cooking_dc, step_image, step_tip };
+    });
+    let data = {
+      Food_info: {
+        food_id,
+        user_id,
+        food_name,
+        summary,
+        nation,
+        type,
+        cooking_time,
+        calorie,
+        qnt,
+        level,
+        food_img,
+        createdAt,
+        updatedAt,
+        like: counted.length,
+        isOn: ulike,
+      },
+      Ingredients,
+      Recipes,
+    };
+    console.log(data);
   })
   .catch((err) => {});
